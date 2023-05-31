@@ -1,5 +1,5 @@
-#ifndef LCD_H
-#define LCD_H
+#ifndef KEYPADLCD_H
+#define KEYPADLCD_H
 
 #include <LiquidCrystal.h>
 
@@ -17,10 +17,7 @@ enum ButtonPressed{ RIGHT, UP, DOWN, LEFT, SELECT, NONE };
 */
 class KeypadLCDControl{
     public:
-        #ifdef ESP8266
-            KeypadLCDControl() : lcd(D8, D9, D4, D5, D6, D7), buttonPin(PIN_A0) {}
-        #endif
-        KeypadLCDControl(int rs_pin, int en_pin, int d4_pin, int d5_pin, int d6_pin, int d7_pin, int buttonPin) : lcd(rs_pin, en_pin, d4_pin, d5_pin, d6_pin, d7_pin), buttonPin(buttonPin) {}
+        KeypadLCDControl(int rs_pin, int en_pin, int d4_pin, int d5_pin, int d6_pin, int d7_pin, int buttonPin) : lcd(rs_pin, en_pin, d4_pin, d5_pin, d6_pin, d7_pin), buttonPin(buttonPin), lastReadTime(0) {}
         ButtonPressed read_LCD_buttons();
         void setup_hook();
         void loop_hook();
@@ -104,4 +101,4 @@ void KeypadLCDControl::loop_hook()
 //to clear the LCD display, use the comment below
 //lcd.clear(); 
 
-#endif
+#endif //KEYPADLCD_H
