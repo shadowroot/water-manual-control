@@ -16,7 +16,7 @@ enum MenuItem{
 
 class Menu{
     public:
-        Menu(KeypadLCDControl* keypad) : currentMenuItem(MenuItem::INITIAL), keypadLCDControl(keypad) {}
+        Menu(KeypadLCDControl* keypad) : currentMenuItem(MenuItem::WATERRING_START), keypadLCDControl(keypad) {}
         void setup_hook();
         void loop_hook();
         void printMenuItem();
@@ -39,7 +39,6 @@ class Menu{
 
 void Menu::setup_hook(){
     keypadLCDControl->setup_hook();
-    initialMenuPrint();
 }
 
 void Menu::loop_hook(){
@@ -52,9 +51,6 @@ void Menu::loop_hook(){
 
 void Menu::keys(){
     switch(currentMenuItem){
-        case MenuItem::INITIAL:
-            initialMenuKeys();
-            break;
         case MenuItem::WATERRING_START:
             waterringStartMenuKeys();
             break;
@@ -85,10 +81,7 @@ void Menu::navKeys(){
 
 void Menu::waterringStartMenuKeys(){
     if(keypadLCDControl->keyPressed() == ButtonPressed::SELECT){
-        while (keypadLCDControl->keyPressed() == ButtonPressed::SELECT)
-        {
-            delay(100);
-        }
+        while (keypadLCDControl->keyPressed() == ButtonPressed::SELECT){ delay(100);}
         
         keypadLCDControl->printTextDown(OK_TEXT);
         delay(1000);
@@ -113,7 +106,6 @@ void Menu::waterringStopMenuPrint(){
 }
 
 void Menu::initialMenuPrint(){
-    
     bool previousState = state;
     keypadLCDControl->printTextUp(WATER_BOOT_TEXT);
     callCommand("STATE");

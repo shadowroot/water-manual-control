@@ -10,7 +10,7 @@ Michael Jonathan, February 2019
 
 ********************************************************/
 
-enum ButtonPressed{ RIGHT, UP, DOWN, LEFT, SELECT, NONE };
+
 
 /**
  * @brief KeypadLCDControl class
@@ -91,11 +91,30 @@ void KeypadLCDControl::setup_hook()
  
 void KeypadLCDControl::loop_hook()
 {
-  if(millis() - lastReadTime >= 100){
-    previousKey = selectedKey;
-    read_LCD_buttons();  // read the buttons
-    lastReadTime = millis();
+  // if(millis() - lastReadTime >= 100){
+  //   previousKey = selectedKey;
+  //   read_LCD_buttons();  // read the buttons
+  //   lastReadTime = millis();
+  // }
+  previousKey = selectedKey;
+  read_LCD_buttons();  // read the buttons
+  if(selectedKey == ButtonPressed::UP){
+    lcd.setCursor(8,1);               // go to the top left corner
+    lcd.print("UP");               // print the text
   }
+  else if(selectedKey == ButtonPressed::DOWN){
+    lcd.setCursor(8,1);               // go to the top left corner
+    lcd.print("DOWN");               // print the text
+  }
+  else if(selectedKey == ButtonPressed::LEFT){
+    lcd.setCursor(8,1);               // go to the top left corner
+    lcd.print("LEFT");               // print the text
+  }
+  else if(selectedKey == ButtonPressed::RIGHT){
+    lcd.setCursor(8,1);               // go to the top left corner
+    lcd.print("RIGHT");               // print the text
+  }
+  lastReadTime = millis();
 }
 
 //to clear the LCD display, use the comment below
