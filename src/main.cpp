@@ -8,6 +8,7 @@ LiquidCrystal lcd(LCD_RS_PIN, LCD_EN_PIN, LCD_D4_PIN, LCD_D5_PIN, LCD_D6_PIN, LC
 
 enum ButtonPressed{ RIGHT, UP, DOWN, LEFT, SELECT, NONE };
 bool running = false;
+int lastStateTime = 0;
 
 void callCommand(const char* command){
     Serial.println(command);
@@ -94,18 +95,22 @@ void setup() {
   lcd.print(WATER_BOOT_TEXT);
   lcd.setCursor(0, 1);
   lcd.print(ACTION_WATERRING_ON_TEXT);
+  pinMode(A1, INPUT_PULLUP);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  callCommand("STATE");
+  if((millis() - lastStateTime) >= 200){
+    callCommand("STATE");
+    lastStateTime = millis();
+  }
   ButtonPressed key = readClickButton();
   if(running){
     lcd.setCursor(0, 0);
     lcd.print(WATER_BOOT_TEXT);
     lcd.setCursor(0, 1);
     lcd.print(ACTION_WATERRING_OFF_TEXT);
-    if(key == ButtonPressed::SELECT){
+    if(key == ButtonPressed::SELECT || digitalRead(A1) == LOW){
       lcd.clear();
       callCommand("OFF");
       running = false;
@@ -116,7 +121,7 @@ void loop() {
     lcd.print(WATER_BOOT_TEXT);
     lcd.setCursor(0, 1);
     lcd.print(ACTION_WATERRING_ON_TEXT);
-    if(key == ButtonPressed::SELECT){
+    if(key == ButtonPressed::SELECT || digitalRead(A1) == LOW){
       lcd.clear();
       callCommand("ON");
       running = true;
