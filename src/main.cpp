@@ -2,35 +2,36 @@
 #include <simpleRPC.h>
 #include "config.h"
 #include <LiquidCrystal.h>
+#include <simpleRPC.h>
 
 LiquidCrystal lcd(LCD_RS_PIN, LCD_EN_PIN, LCD_D4_PIN, LCD_D5_PIN, LCD_D6_PIN, LCD_D7_PIN);
 
 enum ButtonPressed{ RIGHT, UP, DOWN, LEFT, SELECT, NONE };
 bool running = false;
 
-
 void callCommand(const char* command){
     Serial.println(command);
     int i = 0;
-    char buf[10];
-    //wait for response
-    while(Serial.available() == 0){
-    }
-    while (Serial.available() >= 0) {
+    char buf[3];
+    while (Serial.available() > 0) {
       if(Serial.available() > 0){
         int incomingByte = 0;
         // read the incoming byte:
         incomingByte = Serial.read();
-        buf[i] = incomingByte;
+        buf[i%3] = incomingByte;
         i++;
         Serial.print((char)incomingByte);
       }
-      if(strcmp(buf, "ON") == 0){
+      if(buf[0] == 'O' && buf[1] == 'N'){
           running = true;
+          break;
       }
-      else if(strcmp(buf, "OFF") == 0){
+      else if(buf[0] == 'O' && buf[1] == 'F'  && buf[2] == 'F'){
           running = false;
+          break;
       }
+      //Serial.print("buf: ");
+      //Serial.println(buf);
     }
 }
 
@@ -65,7 +66,7 @@ ButtonPressed read_LCD_buttons()
   // Serial.println(adc_key_in);
   // Serial.print("selectedKey: ");
   // Serial.println(selectedKey);
-  lcd.setCursor(8, 1);
+  lcd.setCursor(15, 1);
   lcd.print(selectedText);
   // Serial.print("selectedText: ");
   // Serial.println(selectedText);
@@ -92,7 +93,7 @@ void setup() {
   lcd.setCursor(0, 0);
   lcd.print(WATER_BOOT_TEXT);
   lcd.setCursor(0, 1);
-  lcd.print(ACTION_WATERRING_OFF_TEXT);
+  lcd.print(ACTION_WATERRING_ON_TEXT);
 }
 
 void loop() {
@@ -100,17 +101,25 @@ void loop() {
   callCommand("STATE");
   ButtonPressed key = readClickButton();
   if(running){
+    lcd.setCursor(0, 0);
+    lcd.print(WATER_BOOT_TEXT);
     lcd.setCursor(0, 1);
     lcd.print(ACTION_WATERRING_OFF_TEXT);
     if(key == ButtonPressed::SELECT){
+      lcd.clear();
       callCommand("OFF");
+      running = false;
     }
   }
   else{
+    lcd.setCursor(0, 0);
+    lcd.print(WATER_BOOT_TEXT);
     lcd.setCursor(0, 1);
     lcd.print(ACTION_WATERRING_ON_TEXT);
     if(key == ButtonPressed::SELECT){
+      lcd.clear();
       callCommand("ON");
+      running = true;
     }
   }
 }

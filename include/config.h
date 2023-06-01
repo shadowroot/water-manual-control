@@ -30,7 +30,7 @@
 #define WATER_MODE_AUTO_TEXT "Automaticke"
 #define WATER_MODE_MANUAL_TEXT "Rucni"
 #define ACTION_WATERRING_ON_TEXT "Spust rucni"
-#define ACTION_WATERRING_ON_TEXT "Spust cyklus"
+#define ACTION_WATERRING_ON_CYCLE_TEXT "Spust cyklus"
 #define ACTION_WATERRING_OFF_TEXT "Zastav zalevani"
 #define STATUS_WATERRING_ON_TEXT "Zalevam..."
 #define SET_WATERRING_CYCLE_TEXT "Nastav interval"
